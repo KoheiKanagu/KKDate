@@ -13,18 +13,6 @@
 @implementation NSDate (KKDateCreator)
 
 
-+(void)piyoipyo
-{
-    
-    [self KKGetEndFromBeginOfBeforeDays:5
-                                   date:^(NSDate *dayBeginDate, NSDate *dayEndDate) {
-                                       
-                                   }
-                                 string:^(NSString *dayBeginString, NSString *dayEndString) {
-                                     
-                                 }];
-}
-
 +(void)KKGetEndFromBeginOfBeforeDays:(NSInteger )days date:(KKDayEndFromBeginDate )block string:(KKDayEndFromBeginString)stringBlock
 {
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
@@ -33,7 +21,6 @@
                                     NSMonthCalendarUnit|
                                     NSDayCalendarUnit
                                                fromDate:[NSDate date]];
-    
     [components setDay:components.day-days];
     NSDate *beginDate = [calendar dateFromComponents:components];
     [components setHour:23];
@@ -48,7 +35,115 @@
 }
 
 
++(void)KKGetEndFromBeginOfAfterDays:(NSInteger )days date:(KKDayEndFromBeginDate )block string:(KKDayEndFromBeginString)stringBlock
+{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *components = [calendar components:
+                                    NSYearCalendarUnit|
+                                    NSMonthCalendarUnit|
+                                    NSDayCalendarUnit
+                                               fromDate:[NSDate date]];
+    
+    [components setDay:components.day+days];
+    NSDate *beginDate = [calendar dateFromComponents:components];
+    [components setHour:23];
+    [components setMinute:59];
+    [components setSecond:59];
+    NSDate *endDate = [calendar dateFromComponents:components];
+    
+    NSString *beginString = [self convertNSDateToString:beginDate];
+    NSString *endString = [self convertNSDateToString:endDate];
+    
+    return block(beginDate, endDate), stringBlock(beginString, endString);
+}
 
+
++(void)KKGetEndFromBeginOfLastWeek:(KKDayEndFromBeginDate )block
+{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *components = [calendar components:
+                                    NSYearCalendarUnit|
+                                    NSMonthCalendarUnit|
+                                    NSDayCalendarUnit
+                                               fromDate:[NSDate date]];
+    [components setDay:components.day-8];
+    NSDate *beginDate = [calendar dateFromComponents:components];
+    
+    [components setDay:components.day+7];
+    [components setHour:23];
+    [components setMinute:59];
+    [components setSecond:59];
+    NSDate *endDate = [calendar dateFromComponents:components];
+    
+    return block(beginDate, endDate);
+}
+
++(void)KKGetEndFromBeginOfThisWeek:(KKDayEndFromBeginDate )block
+{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *components = [calendar components:
+                                    NSYearCalendarUnit|
+                                    NSMonthCalendarUnit|
+                                    NSDayCalendarUnit
+                                               fromDate:[NSDate date]];
+    NSDate *beginDate = [calendar dateFromComponents:components];
+    
+    [components setDay:components.day+7];
+    [components setHour:23];
+    [components setMinute:59];
+    [components setSecond:59];
+    NSDate *endDate = [calendar dateFromComponents:components];
+    
+    return block(beginDate, endDate);
+}
+
+
++(NSDate *)KKGetEndOneWeekWith:(NSDate *)sourceWeek
+{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *components = [calendar components:
+                                    NSYearCalendarUnit|
+                                    NSMonthCalendarUnit|
+                                    NSDayCalendarUnit
+                                               fromDate:sourceWeek];
+    
+    [components setDay:components.day+7];
+    [components setHour:23];
+    [components setMinute:59];
+    [components setSecond:59];
+    NSDate *endDate = [calendar dateFromComponents:components];
+    
+    return endDate;
+}
+
++(NSDate *)KKGetStartOneWeekWith:(NSDate *)sourceWeek
+{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *components = [calendar components:
+                                    NSYearCalendarUnit|
+                                    NSMonthCalendarUnit|
+                                    NSDayCalendarUnit
+                                               fromDate:sourceWeek];
+    
+    [components setDay:components.day-7];
+    NSDate *startDate = [calendar dateFromComponents:components];
+    
+    return startDate;
+}
+
+
++(NSInteger )KKGetPassageDaysFrom:(NSDate *)sourceDate
+{
+    if(sourceDate){
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        NSDateComponents *components = [calendar components:NSDayCalendarUnit
+                                                   fromDate:sourceDate
+                                                     toDate:[NSDate date]
+                                                    options:0];
+        return components.day;
+    }
+    return 0;
+}
 
 
 +(NSString *)convertNSDateToString:(NSDate *)date

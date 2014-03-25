@@ -13,10 +13,16 @@ typedef void(^KKDayEndFromBeginString)(NSString *dayBeginString, NSString *dayEn
 
 @interface NSDate (KKDateCreator)
 
-
-+(void)piyoipyo;
-
 +(void)KKGetEndFromBeginOfBeforeDays:(NSInteger )days date:(KKDayEndFromBeginDate )block string:(KKDayEndFromBeginString)stringBlock;
++(void)KKGetEndFromBeginOfAfterDays:(NSInteger )days date:(KKDayEndFromBeginDate )block string:(KKDayEndFromBeginString)stringBlock;
+
++(void)KKGetEndFromBeginOfLastWeek:(KKDayEndFromBeginDate )block;
++(void)KKGetEndFromBeginOfThisWeek:(KKDayEndFromBeginDate )block;
+
++(NSDate *)KKGetEndOneWeekWith:(NSDate *)sourceWeek;
++(NSDate *)KKGetStartOneWeekWith:(NSDate *)sourceWeek;
+
++(NSInteger )KKGetPassageDaysFrom:(NSDate *)sourceDate;
 
 
 @end
